@@ -10,22 +10,22 @@ typedef struct strItem{
 
 
 //AUXILIARES:
-void troca (int* vet, int a, int b){
-    int aux = vet[a];
+void troca (Item* vet, int a, int b){
+    Item aux = vet[a];
     vet[a] = vet[b];
     vet[b] = aux;
 }
 //
 
 //SELECTIONSORT
-void selectionSort(int *vet, int n)
+void selectionSort(Item *vet, int n)
 {
     int iaux, i,j;
     for(i=0;i<n-1;i++)
     {
         iaux=i;
         for(j=i+1;j<n;j++)
-            if(vet[j]<vet[iaux])
+            if(vet[j].chave <vet[iaux].chave)
                 iaux=j;
 
         if(iaux != i)
@@ -35,11 +35,11 @@ void selectionSort(int *vet, int n)
 //
 
 //BUBBLESORT
-void bubbleSort(int *vet, int n){
+void bubbleSort(Item *vet, int n){
     int i,j;
     for(i=n-1;i>=0;i--){
         for(j=0;j<i;j++){
-            if(vet[j]>vet[j+1])
+            if(vet[j].chave > vet[j+1].chave)
                 troca(vet,j,j+1);
         }
     }
@@ -47,11 +47,12 @@ void bubbleSort(int *vet, int n){
 //
 
 //INSERTIONSORT
-void insertionSort(int * vet, int n){
-    int i,j,aux;
+void insertionSort(Item * vet, int n){
+    int i,j;
+    Item aux;
     for(i =1;i<n;i++){
         aux = vet[i];
-        for(j=i-1;j>=0 && vet[j]>aux;j--){
+        for(j=i-1;j>=0 && vet[j].chave > aux.chave;j--){
             vet[j+1] = vet[j];
         }
         vet[j+1] = aux;
@@ -60,11 +61,11 @@ void insertionSort(int * vet, int n){
 //
 
 //MERGESORT
-void intercala(int v[],int L1, int L2, int F){
+void intercala(Item v[],int L1, int L2, int F){
     int iL1 = L1, iL2 = L2, aux = 0;
-    int vAux[F-L1];
+    Item vAux[F-L1];
     while(iL1<L2 && iL2<F){
-        if(v[iL1]<v[iL2]){
+        if(v[iL1].chave<v[iL2].chave){
             vAux[aux] = v[iL1];
             iL1++;
         }else{
@@ -89,7 +90,7 @@ void intercala(int v[],int L1, int L2, int F){
     }
 }
 
-void mergeSort(int v[],int inicio, int fim){
+void mergeSort(Item v[],int inicio, int fim){ //fim = tamanho do vetor
     if(inicio<fim-1){
         int meio = (inicio + fim)/2 ;
         mergeSort(v,inicio,meio);
@@ -100,27 +101,27 @@ void mergeSort(int v[],int inicio, int fim){
 //
 
 //QUICKSORT
-int particao(int* vet, int esq, int dir){
+int particao(Item* vet, int esq, int dir){
     int indPivo = esq;
     esq++;
     while(esq<dir){
-        while(vet[esq]<vet[indPivo])
+        while(vet[esq].chave <vet[indPivo].chave )
             esq++;
-        while(vet[dir]>vet[indPivo])
+        while(vet[dir].chave>vet[indPivo].chave)
             dir--;
         if(esq<dir){
-            int aux = vet[esq];
+            Item aux = vet[esq];
             vet[esq] = vet[dir];
             vet[dir] = aux;
         }
     }
-    int aux = vet[dir];
+    Item aux = vet[dir];
     vet[dir] = vet[indPivo];
     vet[indPivo] = aux;
     return dir;
 }
 
-void quickSort(int *vet, int esq, int dir){
+void quickSort(Item *vet, int esq, int dir){
     if(esq<dir){
         int j = particao(vet,esq,dir);
         quickSort(vet,esq,j-1);
@@ -130,15 +131,15 @@ void quickSort(int *vet, int esq, int dir){
 //
 
 //HEAPSORT
-void max_heapfy(int* vet, int pos, int tam){
+void max_heapfy(Item* vet, int pos, int tam){
     int maior = pos ,esq = 2*pos+1,dir = 2*pos+2;
 
-    if(esq<tam && vet[esq]>vet[pos])
+    if(esq<tam && vet[esq].chave>vet[pos].chave)
         maior = esq;
     else
         maior = pos;
 
-    if(dir<tam && vet[dir]>vet[maior])
+    if(dir<tam && vet[dir].chave>vet[maior].chave)
         maior = dir;
 
     if(maior!=pos){
@@ -148,14 +149,14 @@ void max_heapfy(int* vet, int pos, int tam){
 
 }
 
-void build_maxHeap(int* vet, int tam){
+void build_maxHeap(Item* vet, int tam){
     int i;
     for(i=tam/2;i>=0;i--){
         max_heapfy(vet,i,tam);
     }
 }
 
-void heapSort(int *vet, int tam){
+void heapSort(Item *vet, int tam){
     int i;
     build_maxHeap(vet,tam);
     for(i=tam-1;i>=1;i--){
