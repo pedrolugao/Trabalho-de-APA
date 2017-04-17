@@ -17,8 +17,21 @@ void troca (int* vet, int a, int b){
 }
 //
 
-//SELECTIONSORT(Fazer)
+//SELECTIONSORT
+void selectionSort(int *vet, int n)
+{
+    int iaux, i,j;
+    for(i=0;i<n-1;i++)
+    {
+        iaux=i;
+        for(j=i+1;j<n;j++)
+            if(vet[j]<vet[iaux])
+                iaux=j;
 
+        if(iaux != i)
+        troca(vet,iaux,i);
+    }
+}
 //
 
 //BUBBLESORT
