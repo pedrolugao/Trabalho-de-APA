@@ -1,4 +1,6 @@
 #include <iostream>
+#include <stdlib.h>
+#include <time.h>
 
 //REIMPLEMENTAR OS ALGORITMOS COM VETORES DESSA STRUCT E CONTAGEM DE INSTRUÇÕES
 typedef struct strItem{
@@ -7,13 +9,53 @@ typedef struct strItem{
     int info;
 }Item;
 
-
+enum vetType {
+    SORTED,
+    REVERSE,
+    ALMOST,
+    RANDOM
+};
 
 //AUXILIARES:
 void troca (Item* vet, int a, int b){
     Item aux = vet[a];
     vet[a] = vet[b];
     vet[b] = aux;
+}
+
+Item* gera (int amount, vetType type) {
+    Item* vet = new Item[amount];
+    int i;
+
+    switch (type) {
+        case SORTED:
+            for (i = 0; i < amount; i++)
+                vet[i].chave = i;
+            break;
+        case REVERSE:
+            for (i = 0; i < amount; i++)
+                vet[i].chave = (amount - 1) - i;
+            break;
+        case ALMOST:
+            for (i = 0; i < amount; i++)
+                vet[i].chave = i;
+            troca(vet, 0, amount - 1);
+            break;
+        case RANDOM:
+            vet = gera(amount, SORTED);
+            for (i = 0; i < amount; i++)
+                troca(vet, i, rand() % amount);
+            break;
+    }
+
+    return vet;
+}
+
+void imprime (Item* vet, int n) {
+    int i;
+    for (i = 0; i < n - 1; i++)
+        std::cout << vet[i].chave << ", ";
+    std::cout << vet[i].chave << std::endl;
 }
 //
 
@@ -168,6 +210,13 @@ void heapSort(Item *vet, int tam){
 
 int main()
 {
-    //Fazer geradores para os vetores.
+    srand(time(NULL));
+
+    int amount = 100;
+    Item* vet = gera(amount, RANDOM);
+    imprime(vet, amount);
+    mergeSort(vet, 0, amount);
+    imprime(vet, amount);
+
     return 0;
 }
