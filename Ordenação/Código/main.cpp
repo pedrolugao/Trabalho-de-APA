@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
+#include <locale.h>
+#include <math.h>
 
 //REIMPLEMENTAR OS ALGORITMOS COM VETORES DESSA STRUCT E CONTAGEM DE INSTRUÇÕES
 typedef struct strItem{
@@ -13,7 +15,24 @@ enum vetType {
     SORTED,
     REVERSE,
     ALMOST,
-    RANDOM
+    RANDOM,
+    AMOUNT_OF_TYPES = 4
+};
+
+enum sortMethod {
+    SELECTION,
+    BUBBLE,
+    INSERTION,
+    MERGE,
+    QUICK,
+    HEAP,
+    AMOUNT_OF_METHODS = 6
+};
+
+class my_bool : public std::numpunct< char > {
+protected:
+    std::string do_truename() const { return "Ordenado";  }
+    std::string do_falsename() const { return "Não ordenado"; }
 };
 
 //AUXILIARES:
@@ -56,6 +75,22 @@ void imprime (Item* vet, int n) {
     for (i = 0; i < n - 1; i++)
         std::cout << vet[i].chave << ", ";
     std::cout << vet[i].chave << std::endl;
+}
+
+bool isSorted(Item* vet, int n) {
+    int i;
+    for (i = 1; i < n - 1; i++)
+        if (vet[i].chave < vet[i-1].chave)
+            return false;
+    return true;
+}
+
+Item* clona(Item* vet, int n) {
+    Item* vet2 = new Item[n];
+    int i;
+    for (i = 0; i < n; i++)
+        vet2[i] = vet[i];
+    return vet2;
 }
 //
 
@@ -208,15 +243,132 @@ void heapSort(Item *vet, int tam){
 }
 //
 
+//SORT
+bool sortVet(Item* vet, int n, sortMethod method) {
+    switch (method) {
+        case SELECTION:
+            selectionSort(vet, n);
+            break;
+        case BUBBLE:
+            bubbleSort(vet, n);
+            break;
+        case INSERTION:
+            insertionSort(vet, n);
+            break;
+        case MERGE:
+            mergeSort(vet, 0, n);
+            break;
+        case QUICK:
+            quickSort(vet, 0, n - 1);
+            break;
+        case HEAP:
+            heapSort(vet, n);
+            break;
+    }
+    return isSorted(vet, n);
+}
+//
+
 int main()
 {
-    srand(time(NULL));
+    srand(5);
+    std::cout.imbue(std::locale(std::locale(), new my_bool));
+    std::cout << std::boolalpha;
+    setlocale (LC_ALL, "PORTUGUESE");
 
-    int amount = 100;
-    Item* vet = gera(amount, RANDOM);
-    imprime(vet, amount);
-    mergeSort(vet, 0, amount);
-    imprime(vet, amount);
+    int i, j;
+
+    int AMOUNT_OF_SIZES = 4;
+
+    int* sizes = new int[AMOUNT_OF_SIZES];
+    for (i = 0; i < AMOUNT_OF_SIZES; i++)
+        sizes[i] = (int) round(pow(10, i + 1));
+
+    Item** sortedVets = new Item*[AMOUNT_OF_SIZES];
+    Item** reverseVets = new Item*[AMOUNT_OF_SIZES];
+    Item** almostVets = new Item*[AMOUNT_OF_SIZES];
+    Item** randomVets = new Item*[AMOUNT_OF_SIZES];
+
+    for (i = 0; i < AMOUNT_OF_SIZES; i++) {
+        sortedVets[i] = gera(sizes[i], SORTED);
+        reverseVets[i] = gera(sizes[i], REVERSE);
+        almostVets[i] = gera(sizes[i], ALMOST);
+        randomVets[i] = gera(sizes[i], RANDOM);
+    }
+
+    sortMethod methods[AMOUNT_OF_METHODS] = {SELECTION, BUBBLE, INSERTION, MERGE, QUICK, HEAP};
+    std::string methodsNames[AMOUNT_OF_METHODS] = {"Selection", "Bubble", "Insertion", "Merge", "Quick", "Heap"};
+
+    /*// PARA TESTAR 1 MÉTODO COM TODOS OS TAMANHOS DE 1 TIPO DE VETOR
+    sortMethod method = SELECTION;
+
+    for (i = 0; i < AMOUNT_OF_SIZES; i++) {
+        Item* vet = clona(randomVets[i], sizes[i]);
+        std::cout << "Tamanho do vetor: " << sizes[i] << std::endl;
+        std::cout << "Tipo de vetor: Ordenado" << std::endl;
+        std::cout << "Método: " << methodsNames[method] << std::endl;
+        std::cout << "Resultado: " << sortVet(vet, sizes[i], method) << std::endl << std::endl;
+        free(vet);
+    }/*
+
+    /* PARA TESTAR TODOS OS MÉTODOS COM TODOS OS TAMANHOS DE TODOS OS TIPOS DE VETOR
+    for (j = 0; j < AMOUNT_OF_METHODS; j++) {
+        sortMethod method = methods[j];
+
+        for (i = 0; i < AMOUNT_OF_SIZES; i++) {
+            Item* vet = clona(sortedVets[i], sizes[i]);
+            std::cout << "Tamanho do vetor: " << sizes[i] << std::endl;
+            std::cout << "Tipo de vetor: Ordenado" << std::endl;
+            std::cout << "Método: " << methodsNames[method] << std::endl;
+            std::cout << "Resultado: " << sortVet(vet, sizes[i], method) << std::endl << std::endl;
+            free(vet);
+        }
+
+        for (i = 0; i < AMOUNT_OF_SIZES; i++) {
+            Item* vet = clona(reverseVets[i], sizes[i]);
+            std::cout << "Tamanho do vetor: " << sizes[i] << std::endl;
+            std::cout << "Tipo de vetor: Inversamente Ordenado" << std::endl;
+            std::cout << "Método: " << methodsNames[method] << std::endl;
+            std::cout << "Resultado: " << sortVet(vet, sizes[i], method) << std::endl << std::endl;
+            free(vet);
+        }
+
+        for (i = 0; i < AMOUNT_OF_SIZES; i++) {
+            Item* vet = clona(almostVets[i], sizes[i]);
+            std::cout << "Tamanho do vetor: " << sizes[i] << std::endl;
+            std::cout << "Tipo de vetor: Quase Ordenado" << std::endl;
+            std::cout << "Método: " << methodsNames[method] << std::endl;
+            std::cout << "Resultado: " << sortVet(vet, sizes[i], method) << std::endl << std::endl;
+            free(vet);
+        }
+
+        for (i = 0; i < AMOUNT_OF_SIZES; i++) {
+            Item* vet = clona(randomVets[i], sizes[i]);
+            std::cout << "Tamanho do vetor: " << sizes[i] << std::endl;
+            std::cout << "Tipo de vetor: Aleatoriamente Ordenado" << std::endl;
+            std::cout << "Método: " << methodsNames[method] << std::endl;
+            std::cout << "Resultado: " << sortVet(vet, sizes[i], method) << std::endl << std::endl;
+            free(vet);
+        }
+    }*/
+
+    //LIMPANDO
+    for (i = 0; i < AMOUNT_OF_SIZES; i++) {
+        Item* vet1 = sortedVets[i];
+        Item* vet2 = reverseVets[i];
+        Item* vet3 = almostVets[i];
+        Item* vet4 = randomVets[i];
+        free(vet1);
+        free(vet2);
+        free(vet3);
+        free(vet4);
+    }
+
+    free(sortedVets);
+    free(reverseVets);
+    free(almostVets);
+    free(randomVets);
+    //
 
     return 0;
 }
