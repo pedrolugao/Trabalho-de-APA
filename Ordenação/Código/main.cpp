@@ -3,7 +3,7 @@
 #include <time.h>
 #include <locale.h>
 #include <math.h>
-
+int contador;
 //REIMPLEMENTAR OS ALGORITMOS COM VETORES DESSA STRUCT E CONTAGEM DE INSTRUÇÕES
 typedef struct strItem{
     int chave;
@@ -99,7 +99,8 @@ Item* clona(Item* vet, int n) {
 //SELECTIONSORT
 void selectionSort(Item *vet, int n)
 {
-    int iaux, i,j,contador=0;
+    int iaux, i,j;
+    contador=0;
     for(i=0;i<n-1;i++)
     {
         iaux=i;
@@ -118,7 +119,8 @@ void selectionSort(Item *vet, int n)
 
 //BUBBLESORT
 void bubbleSort(Item *vet, int n){
-    int i,j,contador=0;
+    int i,j;
+    contador=0;
     for(i=n-1;i>=0;i--){
         for(j=0;j<i;j++){
             contador++;
@@ -132,8 +134,9 @@ void bubbleSort(Item *vet, int n){
 
 //INSERTIONSORT
 void insertionSort(Item * vet, int n){
-    int i,j,contador=0;
+    int i,j;
     Item aux;
+    contador=0;
     for(i =1;i<n;i++){
         aux = vet[i];
         contador++;
@@ -151,7 +154,9 @@ void insertionSort(Item * vet, int n){
 void intercala(Item v[],int L1, int L2, int F){
     int iL1 = L1, iL2 = L2, aux = 0;
     Item vAux[F-L1];
+    contador++;
     while(iL1<L2 && iL2<F){
+            contador++;
         if(v[iL1].chave<v[iL2].chave){
             vAux[aux] = v[iL1];
             iL1++;
@@ -161,12 +166,16 @@ void intercala(Item v[],int L1, int L2, int F){
         }
         aux++;
     }
+    contador++;
     while(iL1<L2){
+            contador++;
         vAux[aux] = v[iL1];
         aux++;
         iL1++;
     }
+    contador++;
     while(iL2<F){
+            contador++;
         vAux[aux] = v [iL2];
         aux++;
         iL2++;
@@ -178,6 +187,7 @@ void intercala(Item v[],int L1, int L2, int F){
 }
 
 void mergeSort(Item v[],int inicio, int fim){ //fim = tamanho do vetor
+    contador++;
     if(inicio<fim-1){
         int meio = (inicio + fim)/2 ;
         mergeSort(v,inicio,meio);
@@ -191,11 +201,20 @@ void mergeSort(Item v[],int inicio, int fim){ //fim = tamanho do vetor
 int particao(Item* vet, int esq, int dir){
     int indPivo = esq;
     esq++;
+    contador++;
     while(esq<=dir){
+            contador++;
         while(vet[esq].chave <vet[indPivo].chave )
+        {
+            contador++;
             esq++;
+        }
         while(vet[dir].chave>vet[indPivo].chave)
+        {
+            contador++;
             dir--;
+        }
+        contador++;
         if(esq<dir){
             troca(vet,esq,dir);
         }
@@ -206,6 +225,7 @@ int particao(Item* vet, int esq, int dir){
 }
 
 void quickSort(Item *vet, int esq, int dir){
+    contador++;
     if(esq<dir){
         int j = particao(vet,esq,dir);
         quickSort(vet,esq,j-1);
@@ -217,15 +237,15 @@ void quickSort(Item *vet, int esq, int dir){
 //HEAPSORT
 void max_heapfy(Item* vet, int pos, int tam){
     int maior = pos ,esq = 2*pos+1,dir = 2*pos+2;
-
+    contador++;
     if(esq<tam && vet[esq].chave>vet[pos].chave)
         maior = esq;
     else
         maior = pos;
-
+    contador++;
     if(dir<tam && vet[dir].chave>vet[maior].chave)
         maior = dir;
-
+    contador++;
     if(maior!=pos){
         troca(vet,maior,pos);
         max_heapfy(vet,maior,tam);
@@ -263,13 +283,19 @@ bool sortVet(Item* vet, int n, sortMethod method) {
             insertionSort(vet, n);
             break;
         case MERGE:
+            contador=0;
             mergeSort(vet, 0, n);
+            std::cout<<"Numero de comparacoes"<<contador<<std::endl;
             break;
         case QUICK:
+            contador=0;
             quickSort(vet, 0, n - 1);
+            std::cout<<"Numero de comparacoes"<<contador<<std::endl;
             break;
         case HEAP:
+            contador=0;
             heapSort(vet, n);
+            std::cout<<"Numero de comparacoes"<<contador<<std::endl;
             break;
     }
     return isSorted(vet, n);
@@ -307,7 +333,7 @@ int main()
     std::string methodsNames[AMOUNT_OF_METHODS] = {"Selection", "Bubble", "Insertion", "Merge", "Quick", "Heap"};
 
     //PARA TESTAR 1 MÉTODO COM TODOS OS TAMANHOS DE 1 TIPO DE VETOR
-    sortMethod method = BUBBLE;
+    sortMethod method = QUICK;
 
     for (i = 0; i < AMOUNT_OF_SIZES; i++) {
         Item* vet = clona(randomVets[i], sizes[i]);
