@@ -99,43 +99,51 @@ Item* clona(Item* vet, int n) {
 //SELECTIONSORT
 void selectionSort(Item *vet, int n)
 {
-    int iaux, i,j;
+    int iaux, i,j,contador=0;
     for(i=0;i<n-1;i++)
     {
         iaux=i;
-        for(j=i+1;j<n;j++)
+        for(j=i+1;j<n;j++){
+            contador++;
             if(vet[j].chave <vet[iaux].chave)
                 iaux=j;
-
+        }
+        contador++;
         if(iaux != i)
         troca(vet,iaux,i);
     }
+    std::cout<<"Numero de comparacoes: "<<contador<<std::endl;
 }
 //
 
 //BUBBLESORT
 void bubbleSort(Item *vet, int n){
-    int i,j;
+    int i,j,contador=0;
     for(i=n-1;i>=0;i--){
         for(j=0;j<i;j++){
+            contador++;
             if(vet[j].chave > vet[j+1].chave)
                 troca(vet,j,j+1);
         }
     }
+    std::cout<<"Numero de comparacoes: "<<contador<<std::endl;
 }
 //
 
 //INSERTIONSORT
 void insertionSort(Item * vet, int n){
-    int i,j;
+    int i,j,contador=0;
     Item aux;
     for(i =1;i<n;i++){
         aux = vet[i];
+        contador++;
         for(j=i-1;j>=0 && vet[j].chave > aux.chave;j--){
+            contador++;
             vet[j+1] = vet[j];
         }
         vet[j+1] = aux;
     }
+    std::cout<<"Numero de comparacoes: "<<contador<<std::endl;
 }
 //
 
@@ -299,7 +307,7 @@ int main()
     std::string methodsNames[AMOUNT_OF_METHODS] = {"Selection", "Bubble", "Insertion", "Merge", "Quick", "Heap"};
 
     //PARA TESTAR 1 MÉTODO COM TODOS OS TAMANHOS DE 1 TIPO DE VETOR
-    sortMethod method = QUICK;
+    sortMethod method = BUBBLE;
 
     for (i = 0; i < AMOUNT_OF_SIZES; i++) {
         Item* vet = clona(randomVets[i], sizes[i]);

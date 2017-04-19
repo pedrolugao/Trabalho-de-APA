@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1492608000 source:c:\users\hynax\desktop\trabalho-de-apa-master\ordenação\código\main.cpp
+	<iostream>
+	<stdlib.h>
+	<time.h>
+	<locale.h>
+	<math.h>
+
