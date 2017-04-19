@@ -29,11 +29,13 @@ enum sortMethod {
     AMOUNT_OF_METHODS = 6
 };
 
+
 class my_bool : public std::numpunct< char > {
 protected:
     std::string do_truename() const { return "Ordenado";  }
     std::string do_falsename() const { return "Não ordenado"; }
 };
+
 
 //AUXILIARES:
 void troca (Item* vet, int a, int b){
@@ -181,20 +183,17 @@ void mergeSort(Item v[],int inicio, int fim){ //fim = tamanho do vetor
 int particao(Item* vet, int esq, int dir){
     int indPivo = esq;
     esq++;
-    while(esq<dir){
+    while(esq<=dir){
         while(vet[esq].chave <vet[indPivo].chave )
             esq++;
         while(vet[dir].chave>vet[indPivo].chave)
             dir--;
         if(esq<dir){
-            Item aux = vet[esq];
-            vet[esq] = vet[dir];
-            vet[dir] = aux;
+            troca(vet,esq,dir);
         }
     }
-    Item aux = vet[dir];
-    vet[dir] = vet[indPivo];
-    vet[indPivo] = aux;
+
+    troca(vet,dir,indPivo);
     return dir;
 }
 
@@ -299,17 +298,18 @@ int main()
     sortMethod methods[AMOUNT_OF_METHODS] = {SELECTION, BUBBLE, INSERTION, MERGE, QUICK, HEAP};
     std::string methodsNames[AMOUNT_OF_METHODS] = {"Selection", "Bubble", "Insertion", "Merge", "Quick", "Heap"};
 
-    /*// PARA TESTAR 1 MÉTODO COM TODOS OS TAMANHOS DE 1 TIPO DE VETOR
-    sortMethod method = SELECTION;
+    //PARA TESTAR 1 MÉTODO COM TODOS OS TAMANHOS DE 1 TIPO DE VETOR
+    sortMethod method = QUICK;
 
     for (i = 0; i < AMOUNT_OF_SIZES; i++) {
         Item* vet = clona(randomVets[i], sizes[i]);
         std::cout << "Tamanho do vetor: " << sizes[i] << std::endl;
-        std::cout << "Tipo de vetor: Ordenado" << std::endl;
+        std::cout << "Tipo de vetor: Aleatório" << std::endl;
         std::cout << "Método: " << methodsNames[method] << std::endl;
         std::cout << "Resultado: " << sortVet(vet, sizes[i], method) << std::endl << std::endl;
         free(vet);
-    }/*
+    }
+
 
     /* PARA TESTAR TODOS OS MÉTODOS COM TODOS OS TAMANHOS DE TODOS OS TIPOS DE VETOR
     for (j = 0; j < AMOUNT_OF_METHODS; j++) {
