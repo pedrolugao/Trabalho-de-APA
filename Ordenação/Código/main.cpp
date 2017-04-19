@@ -1,9 +1,9 @@
 #include <iostream>
+#include <string>
 #include <stdlib.h>
 #include <time.h>
-#include <locale.h>
 #include <math.h>
-int contador;
+
 //REIMPLEMENTAR OS ALGORITMOS COM VETORES DESSA STRUCT E CONTAGEM DE INSTRUÇÕES
 typedef struct strItem{
     int chave;
@@ -33,9 +33,10 @@ enum sortMethod {
 class my_bool : public std::numpunct< char > {
 protected:
     std::string do_truename() const { return "Ordenado";  }
-    std::string do_falsename() const { return "Não ordenado"; }
+    std::string do_falsename() const { return std::string() + "N" + char(198) + "o Ordenado"; }
 };
 
+int contadorComparacoes;
 
 //AUXILIARES:
 void troca (Item* vet, int a, int b){
@@ -100,35 +101,33 @@ Item* clona(Item* vet, int n) {
 void selectionSort(Item *vet, int n)
 {
     int iaux, i,j;
-    contador=0;
+
     for(i=0;i<n-1;i++)
     {
         iaux=i;
         for(j=i+1;j<n;j++){
-            contador++;
+            contadorComparacoes++;
             if(vet[j].chave <vet[iaux].chave)
                 iaux=j;
         }
-        contador++;
+        contadorComparacoes++;
         if(iaux != i)
         troca(vet,iaux,i);
     }
-    std::cout<<"Numero de comparacoes: "<<contador<<std::endl;
 }
 //
 
 //BUBBLESORT
 void bubbleSort(Item *vet, int n){
     int i,j;
-    contador=0;
+
     for(i=n-1;i>=0;i--){
         for(j=0;j<i;j++){
-            contador++;
+            contadorComparacoes++;
             if(vet[j].chave > vet[j+1].chave)
                 troca(vet,j,j+1);
         }
     }
-    std::cout<<"Numero de comparacoes: "<<contador<<std::endl;
 }
 //
 
@@ -136,17 +135,16 @@ void bubbleSort(Item *vet, int n){
 void insertionSort(Item * vet, int n){
     int i,j;
     Item aux;
-    contador=0;
+
     for(i =1;i<n;i++){
         aux = vet[i];
-        contador++;
+        contadorComparacoes++;
         for(j=i-1;j>=0 && vet[j].chave > aux.chave;j--){
-            contador++;
+            contadorComparacoes++;
             vet[j+1] = vet[j];
         }
         vet[j+1] = aux;
     }
-    std::cout<<"Numero de comparacoes: "<<contador<<std::endl;
 }
 //
 
@@ -154,9 +152,9 @@ void insertionSort(Item * vet, int n){
 void intercala(Item v[],int L1, int L2, int F){
     int iL1 = L1, iL2 = L2, aux = 0;
     Item vAux[F-L1];
-    contador++;
+    contadorComparacoes++;
     while(iL1<L2 && iL2<F){
-            contador++;
+            contadorComparacoes++;
         if(v[iL1].chave<v[iL2].chave){
             vAux[aux] = v[iL1];
             iL1++;
@@ -166,16 +164,16 @@ void intercala(Item v[],int L1, int L2, int F){
         }
         aux++;
     }
-    contador++;
+    contadorComparacoes++;
     while(iL1<L2){
-            contador++;
+            contadorComparacoes++;
         vAux[aux] = v[iL1];
         aux++;
         iL1++;
     }
-    contador++;
+    contadorComparacoes++;
     while(iL2<F){
-            contador++;
+            contadorComparacoes++;
         vAux[aux] = v [iL2];
         aux++;
         iL2++;
@@ -187,7 +185,7 @@ void intercala(Item v[],int L1, int L2, int F){
 }
 
 void mergeSort(Item v[],int inicio, int fim){ //fim = tamanho do vetor
-    contador++;
+    contadorComparacoes++;
     if(inicio<fim-1){
         int meio = (inicio + fim)/2 ;
         mergeSort(v,inicio,meio);
@@ -201,20 +199,20 @@ void mergeSort(Item v[],int inicio, int fim){ //fim = tamanho do vetor
 int particao(Item* vet, int esq, int dir){
     int indPivo = esq;
     esq++;
-    contador++;
+    contadorComparacoes++;
     while(esq<=dir){
-            contador++;
+            contadorComparacoes++;
         while(vet[esq].chave <vet[indPivo].chave )
         {
-            contador++;
+            contadorComparacoes++;
             esq++;
         }
         while(vet[dir].chave>vet[indPivo].chave)
         {
-            contador++;
+            contadorComparacoes++;
             dir--;
         }
-        contador++;
+        contadorComparacoes++;
         if(esq<dir){
             troca(vet,esq,dir);
         }
@@ -225,7 +223,7 @@ int particao(Item* vet, int esq, int dir){
 }
 
 void quickSort(Item *vet, int esq, int dir){
-    contador++;
+    contadorComparacoes++;
     if(esq<dir){
         int j = particao(vet,esq,dir);
         quickSort(vet,esq,j-1);
@@ -237,15 +235,15 @@ void quickSort(Item *vet, int esq, int dir){
 //HEAPSORT
 void max_heapfy(Item* vet, int pos, int tam){
     int maior = pos ,esq = 2*pos+1,dir = 2*pos+2;
-    contador++;
+    contadorComparacoes++;
     if(esq<tam && vet[esq].chave>vet[pos].chave)
         maior = esq;
     else
         maior = pos;
-    contador++;
+    contadorComparacoes++;
     if(dir<tam && vet[dir].chave>vet[maior].chave)
         maior = dir;
-    contador++;
+    contadorComparacoes++;
     if(maior!=pos){
         troca(vet,maior,pos);
         max_heapfy(vet,maior,tam);
@@ -272,6 +270,8 @@ void heapSort(Item *vet, int tam){
 
 //SORT
 bool sortVet(Item* vet, int n, sortMethod method) {
+    contadorComparacoes = 0;
+
     switch (method) {
         case SELECTION:
             selectionSort(vet, n);
@@ -283,21 +283,19 @@ bool sortVet(Item* vet, int n, sortMethod method) {
             insertionSort(vet, n);
             break;
         case MERGE:
-            contador=0;
             mergeSort(vet, 0, n);
-            std::cout<<"Numero de comparacoes"<<contador<<std::endl;
             break;
         case QUICK:
-            contador=0;
             quickSort(vet, 0, n - 1);
-            std::cout<<"Numero de comparacoes"<<contador<<std::endl;
             break;
         case HEAP:
-            contador=0;
             heapSort(vet, n);
-            std::cout<<"Numero de comparacoes"<<contador<<std::endl;
             break;
     }
+
+    std::string stringNumComparacoes = std::string() + "N" + char(163) + "mero de compara" + char(135) + char(228) + "es: ";
+    std::cout << stringNumComparacoes << contadorComparacoes << std::endl;
+
     return isSorted(vet, n);
 }
 //
@@ -307,7 +305,6 @@ int main()
     srand(5);
     std::cout.imbue(std::locale(std::locale(), new my_bool));
     std::cout << std::boolalpha;
-    setlocale (LC_ALL, "PORTUGUESE");
 
     int i, j;
 
@@ -338,8 +335,8 @@ int main()
     for (i = 0; i < AMOUNT_OF_SIZES; i++) {
         Item* vet = clona(randomVets[i], sizes[i]);
         std::cout << "Tamanho do vetor: " << sizes[i] << std::endl;
-        std::cout << "Tipo de vetor: Aleatório" << std::endl;
-        std::cout << "Método: " << methodsNames[method] << std::endl;
+        std::cout << "Tipo de vetor: Aleat" << char(162) << "rio" << std::endl;
+        std::cout << "M" << char(130) << "todo: " << methodsNames[method] << std::endl;
         std::cout << "Resultado: " << sortVet(vet, sizes[i], method) << std::endl << std::endl;
         free(vet);
     }
