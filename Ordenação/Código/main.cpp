@@ -44,7 +44,7 @@ void troca (Item* vet, int a, int b){
     Item aux = vet[a];
     vet[a] = vet[b];
     vet[b] = aux;
-    contadorAtribuicoes+=3;
+    contadorAtribuicoes++;
 }
 
 Item* gera (int amount, vetType type) {
@@ -107,18 +107,13 @@ void selectionSort(Item *vet, int n)
     for(i=0;i<n-1;i++)
     {
         iaux=i;
-        contadorComparacoes++;
-        contadorAtribuicoes+=2;
         for(j=i+1;j<n;j++){
-            contadorComparacoes+=2;
-            contadorAtribuicoes++;
+            contadorComparacoes++;
             if(vet[j].chave <vet[iaux].chave)
                 iaux=j;
-                contadorAtribuicoes;
         }
-        contadorComparacoes++;
         if(iaux != i)
-        troca(vet,iaux,i);
+            troca(vet,iaux,i);
     }
 }
 //
@@ -128,11 +123,8 @@ void bubbleSort(Item *vet, int n){
     int i,j;
 
     for(i=n-1;i>=0;i--){
-        contadorAtribuicoes++;
-        contadorComparacoes++;
         for(j=0;j<i;j++){
             contadorComparacoes++;
-            contadorAtribuicoes++;
             if(vet[j].chave > vet[j+1].chave)
                 troca(vet,j,j+1);
         }
@@ -147,10 +139,9 @@ void insertionSort(Item * vet, int n){
 
     for(i =1;i<n;i++){
         aux = vet[i];
-        contadorAtribuicoes+=2;
         contadorComparacoes++;
         for(j=i-1;j>=0 && vet[j].chave > aux.chave;j--){
-            contadorComparacoes+=2;
+            contadorComparacoes++;
             contadorAtribuicoes++;
             vet[j+1] = vet[j];
         }
@@ -163,11 +154,9 @@ void insertionSort(Item * vet, int n){
 //MERGESORT
 void intercala(Item v[],int L1, int L2, int F){
     int iL1 = L1, iL2 = L2, aux = 0;
-    contadorAtribuicoes+=3;
     Item vAux[F-L1];
-    contadorComparacoes++;
     while(iL1<L2 && iL2<F){
-        contadorComparacoes+=3;
+        contadorComparacoes++;
         if(v[iL1].chave<v[iL2].chave){
             vAux[aux] = v[iL1];
             iL1++;
@@ -175,39 +164,34 @@ void intercala(Item v[],int L1, int L2, int F){
             vAux[aux] = v[iL2];
             iL2++;
         }
-        contadorAtribuicoes+=2;
+        contadorAtribuicoes++;
         aux++;
     }
-    contadorComparacoes++;
+
     while(iL1<L2){
-        contadorComparacoes++;
         vAux[aux] = v[iL1];
         aux++;
         iL1++;
-        contadorAtribuicoes+=3;
+        contadorAtribuicoes++;
     }
-    contadorComparacoes++;
+
+
     while(iL2<F){
-        contadorComparacoes++;
         vAux[aux] = v [iL2];
         aux++;
         iL2++;
-        contadorAtribuicoes+=3;
+        contadorAtribuicoes++;
 
     }
-    contadorComparacoes++;
 
     for(aux = L1;aux<F;aux++){
-        contadorAtribuicoes+=2;
-        contadorComparacoes++;
+        contadorAtribuicoes++;
         v[aux] = vAux[aux-L1];
     }
 }
 
 void mergeSort(Item v[],int inicio, int fim){ //fim = tamanho do vetor
-    contadorComparacoes++;
     if(inicio<fim-1){
-        contadorAtribuicoes++;
         int meio = (inicio + fim)/2 ;
         mergeSort(v,inicio,meio);
         mergeSort(v,meio,fim);
@@ -219,24 +203,16 @@ void mergeSort(Item v[],int inicio, int fim){ //fim = tamanho do vetor
 //QUICKSORT
 int particao(Item* vet, int esq, int dir){
     int indPivo = esq;
-    contadorAtribuicoes++;
     esq++;
-    contadorComparacoes++;
     while(esq<=dir){
-        contadorComparacoes++;
-        while(vet[esq].chave <vet[indPivo].chave )
-        {
+        while(vet[esq].chave <vet[indPivo].chave ){
             contadorComparacoes++;
-            contadorAtribuicoes++;
             esq++;
         }
-        while(vet[dir].chave>vet[indPivo].chave)
-        {
+        while(vet[dir].chave>vet[indPivo].chave){
             contadorComparacoes++;
-            contadorAtribuicoes++;
             dir--;
         }
-        contadorComparacoes++;
         if(esq<dir){
             troca(vet,esq,dir);
         }
@@ -247,9 +223,7 @@ int particao(Item* vet, int esq, int dir){
 }
 
 void quickSort(Item *vet, int esq, int dir){
-    contadorComparacoes++;
     if(esq<dir){
-        contadorAtribuicoes++;
         int j = particao(vet,esq,dir);
         quickSort(vet,esq,j-1);
         quickSort(vet,j+1,dir);
@@ -260,18 +234,16 @@ void quickSort(Item *vet, int esq, int dir){
 //HEAPSORT
 void max_heapfy(Item* vet, int pos, int tam){
     int maior = pos ,esq = 2*pos+1,dir = 2*pos+2;
-    contadorComparacoes+=2;
+    contadorComparacoes++;
     if(esq<tam && vet[esq].chave>vet[pos].chave)
         maior = esq;
     else
         maior = pos;
-    contadorAtribuicoes++;
-    contadorComparacoes+=2;
+
     if(dir<tam && vet[dir].chave>vet[maior].chave){
         maior = dir;
-        contadorAtribuicoes++;
     }
-    contadorComparacoes++;
+
     if(maior!=pos){
         troca(vet,maior,pos);
         max_heapfy(vet,maior,tam);
@@ -281,10 +253,7 @@ void max_heapfy(Item* vet, int pos, int tam){
 
 void build_maxHeap(Item* vet, int tam){
     int i;
-    contadorComparacoes++;
     for(i=tam/2;i>=0;i--){
-        contadorComparacoes++;
-        contadorAtribuicoes++;
         max_heapfy(vet,i,tam);
     }
 }
@@ -293,8 +262,6 @@ void heapSort(Item *vet, int tam){
     int i;
     build_maxHeap(vet,tam);
     for(i=tam-1;i>=1;i--){
-        contadorComparacoes++;
-        contadorAtribuicoes++;
         troca(vet,0,i);
         max_heapfy(vet,0,i);
     }
@@ -367,8 +334,8 @@ int main()
     std::string methodsNames[AMOUNT_OF_METHODS] = {"Selection", "Bubble", "Insertion", "Merge", "Quick", "Heap"};
 
     //PARA TESTAR 1 MÉTODO COM TODOS OS TAMANHOS DE 1 TIPO DE VETOR
-
-    sortMethod method = HEAP;
+    /*
+    sortMethod method = INSERTION;
 
     for (i = 0; i < AMOUNT_OF_SIZES; i++) {
         Item* vet = clona(randomVets[i], sizes[i]);
@@ -378,9 +345,9 @@ int main()
         std::cout << "Resultado: " << sortVet(vet, sizes[i], method) << std::endl << std::endl;
         free(vet);
     }
+    */
 
-
-    /* PARA TESTAR TODOS OS MÉTODOS COM TODOS OS TAMANHOS DE TODOS OS TIPOS DE VETOR
+    // PARA TESTAR TODOS OS MÉTODOS COM TODOS OS TAMANHOS DE TODOS OS TIPOS DE VETOR
     for (j = 0; j < AMOUNT_OF_METHODS; j++) {
         sortMethod method = methods[j];
 
@@ -419,7 +386,7 @@ int main()
             std::cout << "Resultado: " << sortVet(vet, sizes[i], method) << std::endl << std::endl;
             free(vet);
         }
-    }*/
+    }
 
     //LIMPANDO
     for (i = 0; i < AMOUNT_OF_SIZES; i++) {
