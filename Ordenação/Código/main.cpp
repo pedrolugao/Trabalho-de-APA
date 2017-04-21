@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include<time.h>
 
 //REIMPLEMENTAR OS ALGORITMOS COM VETORES DESSA STRUCT E CONTAGEM DE INSTRUÇÕES
 typedef struct strItem{
@@ -270,8 +271,12 @@ void heapSort(Item *vet, int tam){
 
 //SORT
 bool sortVet(Item* vet, int n, sortMethod method) {
+    clock_t inicio, fim;
     contadorComparacoes = 0;
     contadorAtribuicoes = 0;
+
+    inicio = clock();
+
 
     switch (method) {
         case SELECTION:
@@ -293,6 +298,12 @@ bool sortVet(Item* vet, int n, sortMethod method) {
             heapSort(vet, n);
             break;
     }
+
+    fim = clock();
+    int tempo = fim - inicio;
+    tempo = tempo;
+
+    std::cout << "Tempo consumido (em clocks): "<< tempo << std::endl;
 
     std::string stringNumComparacoes = std::string() + "N" + char(163) + "mero de compara" + char(135) + char(228) + "es: ";
     std::cout << stringNumComparacoes << contadorComparacoes << std::endl;
