@@ -53,25 +53,26 @@ void troca (Item* vet, int a, int b){
     contadorAtribuicoes++;
 }
 
+//! Gera um vetor recebendo o tamanho desejado e o tipo, de acordo com o enum vetType
 Item* gera (int amount, vetType type) {
     Item* vet = new Item[amount];
     int i;
 
     switch (type) {
-        case SORTED:
+        case SORTED: //! Vetor onde um elemento é sempre menor que o próximo
             for (i = 0; i < amount; i++)
                 vet[i].chave = i;
             break;
-        case REVERSE:
+        case REVERSE: //! Vetor onde um elemento é sempre maior que o próximo
             for (i = 0; i < amount; i++)
                 vet[i].chave = (amount - 1) - i;
             break;
-        case ALMOST:
+        case ALMOST: //! Vetor igual o ordenado só que com o primeiro e o último elementos trocados
             for (i = 0; i < amount; i++)
                 vet[i].chave = i;
             troca(vet, 0, amount - 1);
             break;
-        case RANDOM:
+        case RANDOM: //! É gerado um vetor ordenado e depois vários elementos são trocados de lugar de acordo com a função rand()
             vet = gera(amount, SORTED);
             for (i = 0; i < amount; i++)
                 troca(vet, i, rand() % amount);
@@ -275,6 +276,8 @@ void heapSort(Item *vet, int tam){
 //
 
 //SORT
+//! Ordena um vetor recebendo o vetor, o tamanho e qual método deve ser usado, de acordo como enum sortMethod
+//! Retorna um bool que indica se o vetor resultado está ordenado ou não
 bool sortVet(Item* vet, int n, sortMethod method) {
     clock_t inicio, fim;
     contadorComparacoes = 0;
