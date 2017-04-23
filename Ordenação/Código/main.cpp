@@ -12,6 +12,8 @@ typedef struct strItem{
     int info;
 }Item;
 
+//! Enum referente aos tipos de vetores (ordenado, inversamente ordenado,
+//! quase ordenado e aleatoriamente ordenado). Usado na função gera()
 enum vetType {
     SORTED,
     REVERSE,
@@ -20,6 +22,7 @@ enum vetType {
     AMOUNT_OF_TYPES = 4
 };
 
+//! Enum referente aos métodos de sort. Usado na função sortVet()
 enum sortMethod {
     SELECTION,
     BUBBLE,
@@ -30,7 +33,9 @@ enum sortMethod {
     AMOUNT_OF_METHODS = 6
 };
 
-
+//! Classe do tipo std::numpunct que tem como objetivo sobreescrever
+//! parte das strings que o std::cout imprime na tela, no caso os booleans.
+//! O que essa classe faz é imprimir "Ordenado" quando true e "Não ordenado" quando false
 class my_bool : public std::numpunct< char > {
 protected:
     std::string do_truename() const { return "Ordenado";  }
@@ -317,9 +322,9 @@ bool sortVet(Item* vet, int n, sortMethod method) {
 
 int main()
 {
-    srand(5);
-    std::cout.imbue(std::locale(std::locale(), new my_bool));
-    std::cout << std::boolalpha;
+    srand(5); //! Inicia o gerador de números aleatórios com seed 5, para que os números gerados sejam sempre iguais
+    std::cout.imbue(std::locale(std::locale(), new my_bool)); //! Define que a classe criada no início do arquivo seja usada
+    std::cout << std::boolalpha; //! Define que booleans devem ser imprimidos como texto ao invés de 0 ou 1
 
     int i, j;
 
